@@ -10,6 +10,11 @@ class Author(models.Model):
         return self.name
 
 
+class BookQuerySet(models.QuerySet):
+    def bestselling_book(self):
+        return self.filter(bestseller=True)
+
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
     published_date = models.DateField()
@@ -17,6 +22,8 @@ class Book(models.Model):
     bestseller = models.BooleanField(default=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     categories = models.ManyToManyField('Category', related_name='categories')
+
+    objects = BookQuerySet.as_manager()
 
     def __str__(self):
         return self.title
